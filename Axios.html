@@ -27,10 +27,16 @@
         },
         mounted() {
             console.log('onMounted!');
-            axios.get('https://6bc5-61-216-31-115.ngrok-free.app/Rest.php')
+            axios({
+                method: 'GET',
+                url: 'https://e3e6-61-216-31-115.ngrok-free.app/Rest.php',
+                headers:{
+                    'ngrok-skip-browser-warning': true
+                }
+            })
                 .then(function (response) {
                     // handle success
-                    console.log(response.data);
+                    console.log(response);
                 })
                 .catch(function (error) {
                     // handle error
