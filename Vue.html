@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+</head>
+
+<body>
+    <div id="app">
+        <ul>
+            <li>{{this.message}}</li>
+            <li>2</li>
+            <li>3</li>
+            <li>4</li>
+            <li>5</li>
+        </ul>
+        <input v-model="msg" :class="{'error' : msg.length > 10}"/>
+        <input v-model="msg" :class="{'active' : isActive, 'hasError' : hasError}"/>
+        <input v-model.number="num1" /> + <input v-model.number="num2" /> = {{sum}}
+        <h3>{{msg}}</h3>
+        <h3>{{msg}}</h3>
+        <h3>{{msg}}</h3>
+        <h3>{{msg}}</h3>
+        <input type="button" @click="showGame" v-bind:game-type="msg" value="showGame" />
+        <input type="button" @click="flushChk" value="flushChk" />
+
+        <input type="radio" value="1" v-model="pd" id="one" />
+        <label for="one">one</label>
+        <input type="radio" value="2" v-model="pd" id="two" />
+        <label for="two">two</label>
+
+        <input type="checkbox" value="Mike" v-model="chkbox" id="Mike" />
+        <label for="Mike">Mike</label>
+        <input type="checkbox" value="kevin" v-model="chkbox" id="kevin" />
+        <label for="kevin">kevin</label>
+        <input type="checkbox" value="Lucy" v-model="chkbox" id="Lucy" />
+        <label for="Lucy">Lucy</label>
+        <input type="checkbox" value="Bob" v-model="chkbox" id="Bob" />
+        <label for="Bob">Bob</label>
+
+        <p>Checked names: {{ chkbox }}</p>
+
+        <MyComponent />
+    </div>
+
+</body>
+<script type="module">
+    const { createApp } = Vue;
+
+    const vue = createApp({
+        // components: {
+        //     'MyComponent': MyComponent
+        // }, 
+        data() {
+            return {
+                message: 'hello vue!',
+                msg: 'hello!',
+                pd: '1',
+                chkbox: [],
+                num1: 0,
+                num2: 0,
+                hasError: true,
+                isActive: true
+            }
+        },
+        methods: {
+            showGame(event) {
+                console.log(event.target.getAttribute('game-type'));
+            },
+
+            flushChk() {
+                this.chkbox = [];
+            }
+        },
+        watch: {
+            chkbox: function () {
+                console.log(this.chkbox);
+            }
+        },
+        computed: {
+            sum: function () {
+                return this.num1 + this.num2;
+            }
+        }
+    });
+
+    // vue.component('MyComponent', myComponent)
+
+    const vue_mount = vue.mount('#app')
+
+    vue_mount.$data.message = 'vue hello!';
+
+</script>
+<style scoped>
+.error  {
+    border: solid 1px red;
+    color: red;
+}
+
+.active {
+    color: green;
+}
+
+.hasError {
+    border: solid 2px aqua;
+}
+
+</style>
+</html>
