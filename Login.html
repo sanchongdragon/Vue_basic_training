@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.2.1/axios.min.js"></script>
+
+</head>
+
+<body>
+    <div id="app">
+        <h1>{{greeting}}</h1>
+        <h2>你的登入時間還有: {{expired}} 秒</h1>
+    </div>
+</body>
+<script>
+    const { createApp, onMounted } = Vue;
+
+    const vue = createApp({
+        data() {
+            return {
+                name: "",
+                expired: ""
+            }
+        },
+        mounted() {
+            console.log('onMounted!');
+            const url = new URL(window.location);
+
+            const state = url.searchParams.get('state');
+            const code = url.searchParams.get('code');
+            const error = url.searchParams.get('error');
+
+            axios({
+                method: 'POST',
+                url: 'https://0f13-61-216-31-115.ngrok-free.app/google_oauth.php',
+                data: {
+                    state: state,
+                    code: code,
+                    error: error
+                },
+                headers: {
+                    'ngrok-skip-browser-warning': true
+                }
+            }).then((response) => {
+                // handle success
+                console.log(response);
+                console.log(`name: ${response.data.name}`)
+                console.log(`expired: ${response.data.expired}`)
+
+                console.log(`this.name: ${this.name}`);
+
+                this.name = response.data.name;
+                this.expired = response.data.expired;
+                console.log(`this.name: ${this.name}`);
+                this.startCounting();
+            }).catch(function (error) {
+                // handle error
+                console.log(error);
+            }).finally(function () {
+                // always executed
+            });
+        },
+        methods: {
+            startCounting() {
+                console.log(this.expired);
+                console.log(typeof this.expired);
+                if (this.expired) {
+                    setInterval(() => {
+                        console.log("interval!");
+                        this.expired -= 1;
+                    }, 1000);
+                }
+            }
+        },
+        computed: {
+            greeting() {
+                return `Hello ${this.name}!`;
+            }
+        }
+
+    });
+
+    const vue_mount = vue.mount('#app')
+
+</script>
+
+</html>

@@ -14,6 +14,9 @@
 <body>
     <div id="app">
         <h1>{{greeting}}</h1>
+        <button><a href="https://0f13-61-216-31-115.ngrok-free.app/google_oauth.php">Google Login</a></button>
+        <button @click="this.googleLogin()">Axios Oauth</button>
+        <button @click="this.result = '123'">changeResult</button>
     </div>
 </body>
 <script>
@@ -22,30 +25,56 @@
     const vue = createApp({
         data() {
             return {
-                greeting: "Hello Im Axios Test!"
+                result: "123"
             }
         },
         mounted() {
             console.log('onMounted!');
-            axios({
+
+            let res = axios({
                 method: 'GET',
-                url: 'https://e3e6-61-216-31-115.ngrok-free.app/Rest.php',
-                headers:{
+                url: 'https://0f13-61-216-31-115.ngrok-free.app/Rest.php',
+                headers: {
                     'ngrok-skip-browser-warning': true
                 }
             })
-                .then(function (response) {
+                .then((response) => {
                     // handle success
                     console.log(response);
+                    this.result = response.data;
+                    // return response;
                 })
                 .catch(function (error) {
                     // handle error
-                    console.log(error);
+                    console.log(error)
                 })
                 .finally(function () {
                     // always executed
                 });
+                console.log("res: " + res);
+
+        },
+        methods: {
+            googleLogin() {
+                axios({
+                    method: 'GET',
+                    url: 'https://0f13-61-216-31-115.ngrok-free.app/google_oauth.php',
+                    headers: {
+                        'ngrok-skip-browser-warning': true
+                    }
+                }).then(function (response) {
+                    // handle success
+                    console.log(response.data);
+                    location.href = response.data;
+                })
+            }
+        },
+        computed: {
+            greeting() {
+                return `Hello Im Axios Test! result: ${this.result}`;
+            }
         }
+
     });
 
     const vue_mount = vue.mount('#app')
